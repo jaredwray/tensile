@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleResolution": "node",
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "strict": true,
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "declaration": true, // Enable declaration file (.d.ts) generation
+      "declarationMap": true // Optionally, generate source map files for declaration files
+    },
+    "include": ["src/**/*.ts"]
+  }
+  
