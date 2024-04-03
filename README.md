@@ -1,4 +1,4 @@
-# httpmock
+# Tensile
 Http Mock Library Written in Typescript
 
 # WARNING: This is a work in progress and is not ready for use yet. Please use when we hit 1.0.0!
