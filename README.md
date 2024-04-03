@@ -16,7 +16,7 @@ Http Mock Library Written in Typescript
 
 ## Installation
 ```bash
-npm install httpmock
+npm install tensile
 ```
 
 ## License
