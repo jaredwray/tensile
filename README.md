@@ -1,6 +1,7 @@
 # Tensile
-Modern Enterprise Auth Framework
----
+
+### *Modern Enterprise Auth Framework*
+
 [![codecov](https://codecov.io/gh/jaredwray/tensile/graph/badge.svg?token=iAkdAEwD6S)](https://codecov.io/gh/jaredwray/tensile)
 [![tests](https://github.com/jaredwray/tensile/actions/workflows/tests.yaml/badge.svg)](https://github.com/jaredwray/tensile/actions/workflows/tests.yaml)
 [![GitHub license](https://img.shields.io/github/license/jaredwray/tensile)](https://github.com/jaredwray/tensile/blob/master/LICENSE)
