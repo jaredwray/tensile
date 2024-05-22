@@ -1,27 +1,15 @@
 import Keyv from 'keyv';
-import { Airhorn } from 'airhorn';
-import { Ecto } from 'ecto';
+import {Airhorn} from 'airhorn';
+import {Ecto} from 'ecto';
 
 export class Tensile {
+	private readonly cache: Keyv;
+	private readonly notificationProvider: Airhorn;
+	private readonly templateProvider: Ecto;
 
-	private cache: Keyv;
-	private notificationProvider: Airhorn;
-	private templateProvider: Ecto;
-
-    constructor() {
+	constructor() {
 		this.cache = new Keyv();
 		this.notificationProvider = new Airhorn();
 		this.templateProvider = new Ecto();
-        
-    }
-
-	public get Cache(): Keyv {
-		return this.cache;
-	}
-	public get NotificationProvider(): Airhorn {
-		return this.notificationProvider;
-	}
-	public get TemplateProvider(): Ecto {
-		return this.templateProvider;
 	}
 }
