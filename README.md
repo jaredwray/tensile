@@ -1,12 +1,12 @@
 # Tensile
 
-### *Modern Enterprise Auth Framework*
-
 [![codecov](https://codecov.io/gh/jaredwray/tensile/graph/badge.svg?token=iAkdAEwD6S)](https://codecov.io/gh/jaredwray/tensile)
 [![tests](https://github.com/jaredwray/tensile/actions/workflows/tests.yaml/badge.svg)](https://github.com/jaredwray/tensile/actions/workflows/tests.yaml)
 [![GitHub license](https://img.shields.io/github/license/jaredwray/tensile)](https://github.com/jaredwray/tensile/blob/master/LICENSE)
 [![npm](https://img.shields.io/npm/dm/tensile)](https://npmjs.com/package/tensile)
 [![npm](https://img.shields.io/npm/v/tensile)](https://npmjs.com/package/tensile)
+
+# A Modern Enterprise Auth Framework
 
 Tensile was born out of the need to have a modern, easy to use, highly available, and scalable auth (Passwordless, OAuth, M2M, and SAML) framework for the enterprise. It is designed to be easily extensible and maintainable. It is so easy you can be up and running in minutes. 🎉
 
