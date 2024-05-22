@@ -1,5 +1,7 @@
 # Tensile
 Modern Enterprise Auth Framework
+[![codecov](https://codecov.io/gh/jaredwray/tensile/graph/badge.svg?token=iAkdAEwD6S)](https://codecov.io/gh/jaredwray/tensile)
+
 
 Tensile was born out of the need to have a modern, easy to use, highly available, and scalable auth (Passwordless, OAuth, M2M, and SAML) framework for the enterprise. It is designed to be easily extensible and maintainable. It is so easy you can be up and running in minutes. 🎉
 
