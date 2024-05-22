@@ -1,7 +1,7 @@
 {
-  "name": "httpmock",
+  "name": "tensile",
   "version": "0.1.0",
-  "description": "",
+  "description": "Modern Enterprise Auth Framework",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
