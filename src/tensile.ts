@@ -1,15 +1,23 @@
 import Keyv from 'keyv';
 import {Airhorn} from 'airhorn';
 import {Ecto} from 'ecto';
+import {Hookified} from 'hookified';
 
-export class Tensile {
+export type TensileOptions = {
+	cache?: Keyv;
+	notifications?: Airhorn;
+	templates?: Ecto;
+};
+
+export class Tensile extends Hookified {
 	private readonly cache: Keyv;
-	private readonly notificationProvider: Airhorn;
-	private readonly templateProvider: Ecto;
+	private readonly notifications: Airhorn;
+	private readonly templates: Ecto;
 
-	constructor() {
+	constructor(options?: TensileOptions) {
+		super();
 		this.cache = new Keyv();
-		this.notificationProvider = new Airhorn();
-		this.templateProvider = new Ecto();
+		this.notifications = new Airhorn();
+		this.templates = new Ecto();
 	}
 }
