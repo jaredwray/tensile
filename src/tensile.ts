@@ -1,4 +1,4 @@
-import Keyv from 'keyv';
+import {Keyv} from 'keyv';
 import {Airhorn} from 'airhorn';
 import {Ecto} from 'ecto';
 import {Hookified} from 'hookified';
