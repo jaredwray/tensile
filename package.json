@@ -3,8 +3,12 @@
   "version": "0.1.0",
   "description": "Modern Enterprise Auth Framework",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "xo --fix && vitest run --coverage",
     "start": "node dist/index.js",
