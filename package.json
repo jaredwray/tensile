@@ -38,7 +38,7 @@
   "dependencies": {
     "airhorn": "^3.0.4",
     "ecto": "^4.0.0",
-    "hookified": "^0.5.1",
+    "hookified": "^1.4.0",
     "keyv": "^5.0.1"
   }
 }
