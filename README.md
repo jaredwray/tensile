@@ -1,3 +1,5 @@
+![site/logo.svg](site/logo.svg)
+
 # Tensile
 
 [![codecov](https://codecov.io/gh/jaredwray/tensile/graph/badge.svg?token=iAkdAEwD6S)](https://codecov.io/gh/jaredwray/tensile)
