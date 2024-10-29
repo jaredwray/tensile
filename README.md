@@ -1,7 +1,5 @@
 ![site/logo.svg](site/logo.svg)
 
-# Tensile
-
 [![codecov](https://codecov.io/gh/jaredwray/tensile/graph/badge.svg?token=iAkdAEwD6S)](https://codecov.io/gh/jaredwray/tensile)
 [![tests](https://github.com/jaredwray/tensile/actions/workflows/tests.yaml/badge.svg)](https://github.com/jaredwray/tensile/actions/workflows/tests.yaml)
 [![GitHub license](https://img.shields.io/github/license/jaredwray/tensile)](https://github.com/jaredwray/tensile/blob/master/LICENSE)
@@ -29,7 +27,7 @@ Tensile was born out of the need to have a modern, easy to use, highly available
 * MFA Recovery Codes
 * Robust Rest API for Management
 * Advanced Caching via Keyv / Cacheable
-* Maintained Monthly
+* Maintained on a regular basis!
 
 ## Contributing and Code of Conduct
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details. Please see [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
