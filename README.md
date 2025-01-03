@@ -162,6 +162,33 @@ To read more about the options for rate limiting, please see the [@fastify/rate-
 
 # CORS
 
+CORS is based on [@fastify/cors] and enabled by default with the following settings for a public API service:
+
+* `origin`: `*` which allows all origins
+* `methods`: GET, POST, PUT, DELETE, OPTIONS, PATCH
+* `allowedHeaders`: 'Content-Type', 'Authorization', 'Accept', 'X-Requested-With'
+* `exposedHeaders`: 'X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-RateLimit-Reset'
+* `maxAge`: 86400 which will cache the preflight request for 1 day
+
+Here is an example to set the CORS options:
+
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+const tensileOptions = {
+  cors: {
+    origin: 'https://example.com',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    }
+};
+
+app.register(tensile, tensileOptions);
+```
+
 # Helmet
 
 # Swagger/OpenAPI
