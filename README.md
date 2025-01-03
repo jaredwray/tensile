@@ -6,34 +6,87 @@
 [![npm](https://img.shields.io/npm/dm/tensile)](https://npmjs.com/package/tensile)
 [![npm](https://img.shields.io/npm/v/tensile)](https://npmjs.com/package/tensile)
 
-# A Modern Enterprise Auth Framework
+# Fastify Plugin for Modern API Development
 
-Tensile was born out of the need to have a modern, easy to use, highly available, and scalable auth (Passwordless, OAuth, M2M, and SAML) framework for the enterprise. It is designed to be easily extensible and maintainable. It is so easy you can be up and running in minutes. 🎉
+Tensile combines caching, api documentation, and hardening into a single library with pre-configured options that just work. 🎉
 
 🚨 WARNING: This is a work in progress and is not ready for use yet. Please use when we hit 1.0.0!
 
 ## Features
-* Passwordless Auth via Email / Text
-* M2M / JWT built in by default
-* SAML 2.0 Support for Enterprise
-* OAuth Providers - Google, Github, Microsoft, Apple
-* Pluggable Auth Providers
-* Architected for Performance and Availability
-* Customizable Login Templates
-* Webhooks and Eventing
-* Multiple Email Providers
-* Multiple Text Providers
-* MFA via Device / Email / Text
-* MFA Recovery Codes
-* Robust Rest API for Management
-* Advanced Caching via Keyv / Cacheable
+* Caching: Layer 1 / Layer 2 caching built in via [Cacheable](https://cacheable.org)
+* Rate Limiting: Prevent abuse with request rate controls.
+* CORS: Enable cross-origin resource sharing for API clients.
+* Helmet: Harden API security with HTTP headers.
+* Swagger/OpenAPI: Auto-generate API documentation and interactive testing interfaces.
+* Metrics: Collect and expose API metrics for monitoring.
+* Logging: Preset logging via pino-pretty for easy debugging.
 * Maintained on a regular basis!
 
-## Contributing and Code of Conduct
+## Installation
+```bash
+npm install tensile
+```
+
+# Usage
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+app.register(tensile, tensileOptions);
+```
+
+This will add all the features above with the following pre-configured options:
+
+* Caching: Enabled with a default TTL of 60 seconds.
+* Rate Limiting: Enabled with a default limit of 100 requests per minute.
+* CORS: Enabled with default options.
+* Helmet: Enabled with default options.
+* Swagger/OpenAPI: Enabled with default options and a default path of `/`.
+* Metrics: Enabled with default options and a default path of `/metrics`.
+
+For more advanced usage you can initialize Tensile with options and then update the options for each feature using the properties:
+
+# Caching
+
+Caching is provided by [Cacheable](https://cacheable.org) and is enabled by default with a TTL of 60 seconds. You can update the options by setting the `cache` property in the `tensileOptions` object:
+
+```javascript
+const tensileOptions = {
+  cache: {
+    ttl: 120
+  }
+};
+
+app.register(tensile, tensileOptions);
+```
+
+if you want to disable caching, you can set the `cache` property to `false`:
+
+```javascript
+const tensileOptions = {
+  cache: false
+};
+
+app.register(tensile, tensileOptions);
+```
+
+# Rate Limiting
+
+# CORS
+
+# Helmet
+
+# Swagger/OpenAPI
+
+# Metrics
+
+# Contributing and Code of Conduct
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details. Please see [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
 
 
-## License
-MIT - see [LICENSE](LICENSE) for details
+# License
+[MIT & © Jared Wray](LICENSE)
 
 

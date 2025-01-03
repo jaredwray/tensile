@@ -1,5 +1,5 @@
 import {it, expect, describe} from 'vitest';
-import {Tensile} from '../src/tensile.js';
+import {Tensile} from '../src/index.js';
 
 describe('tensile', () => {
 	it('should initiate the constructor', () => {

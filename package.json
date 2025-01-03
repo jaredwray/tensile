@@ -3,9 +3,15 @@
   "version": "0.1.1",
   "description": "Modern Enterprise Auth Framework",
   "type": "module",
-  "main": "./dist/index.js",
-  "exports": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
   "engines": {
     "node": ">=20"
   },
@@ -13,10 +19,10 @@
     "test": "xo --fix && vitest run --coverage",
     "clean": "rimraf ./dist ./coverage ./node_modules package-lock.json",
     "start": "node dist/index.js",
-    "build": "rimraf ./dist && tsc",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "prepare": "tsup src/index.ts --format cjs,esm --dts --clean",
     "website:build": "docula",
-    "website:serve": "docula serve",
-    "prepare": "npm run build"
+    "website:serve": "docula serve"
   },
   "keywords": [],
   "author": "Jared Wray <me@jaredwray.com>",
@@ -26,19 +32,12 @@
     "@vitest/coverage-v8": "^2.0.5",
     "docula": "^0.9.4",
     "rimraf": "^6.0.1",
-    "ts-node": "^10.9.2",
+    "tsup": "^8.3.5",
     "typescript": "^5.5.4",
     "vitest": "^2.0.5",
-    "webpack": "^5.94.0",
     "xo": "^0.59.3"
   },
   "files": [
     "dist"
-  ],
-  "dependencies": {
-    "airhorn": "^3.0.4",
-    "ecto": "^4.0.0",
-    "hookified": "^1.4.0",
-    "keyv": "^5.0.1"
-  }
+  ]
 }
