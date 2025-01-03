@@ -191,6 +191,30 @@ app.register(tensile, tensileOptions);
 
 # Helmet
 
+Helmet is based on [@fastify-helmet](https://github.com/fastify/fastify-helmet) and is enabled with the default settings provided. You can update the options by setting the `helmet` property in the `tensileOptions` object:
+
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+const tensileOptions = {
+  helmet: {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: true,
+      },
+    },
+  },
+};
+
+app.register(tensile, tensileOptions);
+```
+
 # Swagger/OpenAPI
 
 # Metrics
