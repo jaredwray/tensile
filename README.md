@@ -8,7 +8,7 @@
 
 # Fastify Plugin for Modern API Development
 
-Tensile combines caching, api documentation, and hardening into a single library with pre-configured options that just work. 🎉
+Tensile is a [fastify](https://fastify.org) plugin that enables the standard features you need to build a modern REST api service. 🎉
 
 🚨 WARNING: This is a work in progress and is not ready for use yet. Please use when we hit 1.0.0!
 
@@ -72,7 +72,93 @@ const tensileOptions = {
 app.register(tensile, tensileOptions);
 ```
 
+The options are based on `CachableOptions` from [Cacheable](https://cacheable.org) and are passed directly to the `Cacheable` instance:
+
+```typescript
+export type CacheableOptions = {
+	/**
+	 * The primary store for the cacheable instance
+	 */
+	primary?: Keyv | KeyvStoreAdapter;
+	/**
+	 * The secondary store for the cacheable instance
+	 */
+	secondary?: Keyv | KeyvStoreAdapter;
+	/**
+	 * Whether to enable statistics for the cacheable instance
+	 */
+	stats?: boolean;
+	/**
+	 * Whether the secondary store is non-blocking mode. It is set to false by default.
+	 * If it is set to true then the secondary store will not block the primary store.
+	 */
+	nonBlocking?: boolean;
+	/**
+	 * The time-to-live for the cacheable instance and will be used as the default value.
+	 * can be a number in milliseconds or a human-readable format such as `1s` for 1 second or `1h` for 1 hour
+	 * or undefined if there is no time-to-live.
+	 */
+	ttl?: number | string;
+	/**
+	 * The namespace for the cacheable instance. It can be a string or a function that returns a string.
+	 */
+	namespace?: string | (() => string);
+};
+```
+
+To use the cache in your routes, you can use the `cache` property on the `fastify` instance:
+
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+app.register(tensile);
+
+app.get('/cache-example/:id', async (request, reply) => {
+    const { id } = request.params;
+    const cacheKey = `cache-example-${id}`;
+    
+    const cachedValue = app.cache.get(cacheKey);
+    
+    if (cachedValue) {
+        return cachedValue;
+    }
+    
+    const newValue = `New value for ${id}`;
+    
+    app.cache.set(cacheKey, newValue);
+    
+    return newValue;
+});
+```
+
 # Rate Limiting
+
+Rate limiting is based on `@fastify/rate-limit` is enabled by default with the following settings:
+
+* `limit`: 100 requests per minute
+* `timeWindow`: 60000 milliseconds (1 minute)
+
+```javascript
+const tensileOptions = {
+  rateLimit: {
+    limit: 200,
+    timeWindow: 60000
+  }
+};
+```
+
+You can disable rate limiting by setting the `rateLimit` property to `false`:
+
+```javascript
+const tensileOptions = {
+  rateLimit: false
+};
+```
+
+To read more about the options for rate limiting, please see the [@fastify/rate-limit documentation](https://github.com/fastify/fastify-rate-limit?tab=readme-ov-file#options).
 
 # CORS
 
@@ -81,6 +167,8 @@ app.register(tensile, tensileOptions);
 # Swagger/OpenAPI
 
 # Metrics
+
+# Logging
 
 # Contributing and Code of Conduct
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details. Please see [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
