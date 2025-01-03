@@ -18,7 +18,6 @@ Tensile is a [fastify](https://fastify.org) plugin that enables the standard fea
 * CORS: Enable cross-origin resource sharing for API clients.
 * Helmet: Harden API security with HTTP headers.
 * Swagger/OpenAPI: Auto-generate API documentation and interactive testing interfaces.
-* Metrics: Collect and expose API metrics for monitoring.
 * Logging: Preset logging via pino-pretty for easy debugging.
 * Maintained on a regular basis!
 
@@ -217,9 +216,60 @@ app.register(tensile, tensileOptions);
 
 # Swagger/OpenAPI
 
-# Metrics
+Swagger/OpenAPI is based on [@fastify/swagger](https://github.com/fastify/fastify-swagger) and is enabled with the following settings:
+
+* `routePrefix`: `/`
+* `openApi`: We use the latest version of OpenAPI (3.0.3) instead of swagger
+
+You can update the options by setting the `swagger` property in the `tensileOptions` object:
+
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+const tensileOptions = {
+  swagger: {
+    routePrefix: '/docs',
+    openApi: {
+      info: {
+        title: 'My API',
+        description: 'API documentation for my API',
+        version: '1.0.0',
+      },
+      servers: [
+        {
+          url: 'http://localhost:3000',
+          description: 'Development server',
+        },
+      ],
+    },
+  },
+};
+```
 
 # Logging
+
+Logging is based on [pino-pretty](https://github.com/pinojs/pino-pretty) and is enabled with the default settings provided. You can update the options by setting the `logging` property in the `tensileOptions` object:
+
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+const tensileOptions = {
+  logging: {
+    prettyPrint: {
+      colorize: true,
+      translateTime: 'SYS:standard',
+    },
+  },
+};
+
+app.register(tensile, tensileOptions);
+```
 
 # Contributing and Code of Conduct
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details. Please see [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
