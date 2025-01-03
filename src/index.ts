@@ -1,14 +1,9 @@
-export type TensileOptions = {
-
-};
+export type TensileOptions = Record<string, unknown>;
 
 export class Tensile {
-	constructor(options?: TensileOptions) {
-	}
+	constructor(options?: TensileOptions) {}
 }
 
-const tensile = () => {
-	return new Tensile();
-}
+const tensile = () => new Tensile();
 
 export default tensile;
