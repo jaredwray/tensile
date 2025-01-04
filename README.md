@@ -8,7 +8,7 @@
 
 # Fastify Plugin for Modern API Development
 
-Tensile is a [fastify](https://fastify.org) plugin that enables the standard features you need to build a modern REST api service. 🎉
+Tensile is a [fastify](https://fastify.dev) plugin that enables the standard features you need to build a modern REST api service. 🎉
 
 🚨 WARNING: This is a work in progress and is not ready for use yet. Please use when we hit 1.0.0!
 
@@ -33,17 +33,16 @@ import tensile from 'tensile';
 
 const app = fastify();
 
-app.register(tensile, tensileOptions);
+app.register(tensile);
 ```
 
 This will add all the features above with the following pre-configured options:
 
 * Caching: Enabled with a default TTL of 60 seconds.
-* Rate Limiting: Enabled with a default limit of 100 requests per minute.
+* Rate Limiting: Enabled with a default limit of 500 requests per minute.
 * CORS: Enabled with default options.
 * Helmet: Enabled with default options.
-* Swagger/OpenAPI: Enabled with default options and a default path of `/`.
-* Metrics: Enabled with default options and a default path of `/metrics`.
+* Swagger/OpenAPI: Enabled with `/openapi.json` and a default client at path of `/`.
 
 For more advanced usage you can initialize Tensile with options and then update the options for each feature using the properties:
 
@@ -220,6 +219,9 @@ Swagger/OpenAPI is based on [@fastify/swagger](https://github.com/fastify/fastif
 
 * `routePrefix`: `/`
 * `openApi`: We use the latest version of OpenAPI (3.0.3) instead of swagger
+* `title`: We get this fron `package.json` and cache it in memory for performance
+* `description`: We get this fron `package.json` and cache it in memory for performance
+* `version`: We get this fron `package.json` and cache it in memory for performance
 
 You can update the options by setting the `swagger` property in the `tensileOptions` object:
 
@@ -230,7 +232,7 @@ import tensile from 'tensile';
 const app = fastify();
 
 const tensileOptions = {
-  swagger: {
+  docs: {
     routePrefix: '/docs',
     openApi: {
       info: {
