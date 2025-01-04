@@ -1,7 +1,7 @@
 {
   "name": "tensile",
   "version": "0.1.1",
-  "description": "Modern Enterprise Auth Framework",
+  "description": "Fastify Plugin for Modern API Development",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

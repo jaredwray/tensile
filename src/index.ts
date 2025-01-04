@@ -1,13 +1,12 @@
-import { CacheableOptions } from 'cacheable';
+import {type CacheableOptions} from 'cacheable';
 import pino from 'pino';
-import {FastifyPluginAsync} from 'fastify';
-import fastifyRateLimit, { RateLimitOptions } from '@fastify/rate-limit';
-import fastifyCors, {FastifyCorsOptions} from '@fastify/cors';
-import fastifyHelmet, {FastifyHelmetOptions} from '@fastify/helmet';
-import {fastifySwagger} from '@fastify/swagger';
-import ScalarApiReference from '@scalar/fastify-api-reference';
+import {type FastifyPluginAsync} from 'fastify';
+import fastifyRateLimit, {type RateLimitOptions} from '@fastify/rate-limit';
+import fastifyCors, {type FastifyCorsOptions} from '@fastify/cors';
+import fastifyHelmet, {type FastifyHelmetOptions} from '@fastify/helmet';
+import {fastifySwagger, type SwaggerOptions} from '@fastify/swagger';
+import ScalarApiReference, {type FastifyApiReferenceOptions} from '@scalar/fastify-api-reference';
 import {readPackageUp} from 'read-package-up';
-
 
 export type TensileOptions = {
 	caching?: boolean | CacheableOptions;
@@ -15,33 +14,21 @@ export type TensileOptions = {
 	cors?: boolean | FastifyCorsOptions;
 	helment?: boolean | FastifyHelmetOptions;
 	logging?: boolean;
-	docs?: boolean;
+	openapi?: boolean;
+	apiDocs?: boolean | FastifyApiReferenceOptions;
 };
 
 const tensile: FastifyPluginAsync = async (fastify, options: TensileOptions) => {
-
 	if (options?.rateLimit !== false) {
-		if(typeof options.rateLimit === 'boolean') {
-			await fastify.register(fastifyRateLimit);
-		} else {
-			await fastify.register(fastifyRateLimit, options.rateLimit as RateLimitOptions);
-		}
+		await (typeof options.rateLimit === 'boolean' ? fastify.register(fastifyRateLimit) : fastify.register(fastifyRateLimit, options.rateLimit!));
 	}
 
 	if (options?.cors !== false) {
-		if(typeof options.cors === 'boolean') {
-			await fastify.register(fastifyCors);
-		} else {
-			await fastify.register(fastifyCors, options.cors as FastifyCorsOptions);
-		}
+		await (typeof options.cors === 'boolean' ? fastify.register(fastifyCors) : fastify.register(fastifyCors, options.cors!));
 	}
 
 	if (options?.helment !== false) {
-		if(typeof options.helment === 'boolean') {
-			await fastify.register(fastifyHelmet);
-		} else {
-			await fastify.register(fastifyHelmet, options.helment as FastifyHelmetOptions);
-		}
+		await (typeof options.helment === 'boolean' ? fastify.register(fastifyHelmet) : fastify.register(fastifyHelmet, options.helment!));
 	}
 
 	if (options?.logging !== false) {
@@ -54,44 +41,55 @@ const tensile: FastifyPluginAsync = async (fastify, options: TensileOptions) => 
 					translateTime: true,
 					ignore: 'pid,hostname',
 					singleLine: true,
-				}
-			}
-			
+				},
+			},
+
 		});
 		fastify.log = logger;
 	}
 
-	if (options?.docs !== false) {
+	let title = 'API';
+	let version = '0.0.0';
+	let description = 'API Documentation';
 
-		// Get package info
+	if (options?.openapi !== false || options?.apiDocs !== false) {
 		const packageInfo = await readPackageUp();
-		const title = packageInfo?.packageJson.name ?? 'API';
-		const version = packageInfo?.packageJson.version ?? '0.0.0';
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-		const description = packageInfo?.packageJson.description ?? 'API Documentation';
+		title = packageInfo?.packageJson.name ?? 'API';
+		version = packageInfo?.packageJson.version ?? '0.0.0';
+		description = packageInfo?.packageJson.description ?? 'API Documentation';
+	}
 
-		const swaggerOptions: any = {
+	if (options?.openapi !== false) {
+		// Get package info
+		const swaggerOptions: SwaggerOptions = {
 			openapi: {
 				info: {
 					title,
 					version,
 					description,
 				},
-				schemes: ['http'],
-				consumes: ['application/json'],
-				produces: ['application/json'],
-			}
+			},
 		};
 
 		await fastify.register(fastifySwagger, swaggerOptions);
+	}
 
-		fastify.get('/openapi.json', async (request, reply) => {
-			return fastify.swagger();
-		});
-
-		await fastify.register(ScalarApiReference, {
+	if (options?.apiDocs !== false) {
+		const defaultScalaApiReferenceOptions: FastifyApiReferenceOptions = {
 			routePrefix: '/',
-		});
+			configuration: {
+				metaData: {
+					title,
+					version,
+					description,
+				},
+			},
+		};
+
+		const scalarApiReferenceOptions = options.apiDocs ?? defaultScalaApiReferenceOptions;
+		console.log(scalarApiReferenceOptions);
+
+		await fastify.register(ScalarApiReference, scalarApiReferenceOptions as FastifyApiReferenceOptions);
 	}
 };
 
