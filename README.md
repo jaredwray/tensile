@@ -6,34 +6,278 @@
 [![npm](https://img.shields.io/npm/dm/tensile)](https://npmjs.com/package/tensile)
 [![npm](https://img.shields.io/npm/v/tensile)](https://npmjs.com/package/tensile)
 
-# A Modern Enterprise Auth Framework
+# Fastify Plugin for Modern API Development
 
-Tensile was born out of the need to have a modern, easy to use, highly available, and scalable auth (Passwordless, OAuth, M2M, and SAML) framework for the enterprise. It is designed to be easily extensible and maintainable. It is so easy you can be up and running in minutes. 🎉
+Tensile is a [fastify](https://fastify.dev) plugin that enables the standard features you need to build a modern REST api service. 🎉
 
 🚨 WARNING: This is a work in progress and is not ready for use yet. Please use when we hit 1.0.0!
 
 ## Features
-* Passwordless Auth via Email / Text
-* M2M / JWT built in by default
-* SAML 2.0 Support for Enterprise
-* OAuth Providers - Google, Github, Microsoft, Apple
-* Pluggable Auth Providers
-* Architected for Performance and Availability
-* Customizable Login Templates
-* Webhooks and Eventing
-* Multiple Email Providers
-* Multiple Text Providers
-* MFA via Device / Email / Text
-* MFA Recovery Codes
-* Robust Rest API for Management
-* Advanced Caching via Keyv / Cacheable
+* Caching: Layer 1 / Layer 2 caching built in via [Cacheable](https://cacheable.org)
+* Rate Limiting: Prevent abuse with request rate controls.
+* CORS: Enable cross-origin resource sharing for API clients.
+* Helmet: Harden API security with HTTP headers.
+* Swagger/OpenAPI: Auto-generate API documentation and interactive testing interfaces.
+* Logging: Preset logging via pino-pretty for easy debugging.
 * Maintained on a regular basis!
 
-## Contributing and Code of Conduct
+## Installation
+```bash
+npm install tensile
+```
+
+# Usage
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+app.register(tensile);
+```
+
+This will add all the features above with the following pre-configured options:
+
+* Caching: Enabled with a default TTL of 60 seconds.
+* Rate Limiting: Enabled with a default limit of 500 requests per minute.
+* CORS: Enabled with default options.
+* Helmet: Enabled with default options.
+* Swagger/OpenAPI: Enabled with `/openapi.json` and a default client at path of `/`.
+
+For more advanced usage you can initialize Tensile with options and then update the options for each feature using the properties:
+
+# Caching
+
+Caching is provided by [Cacheable](https://cacheable.org) and is enabled by default with a TTL of 60 seconds. You can update the options by setting the `cache` property in the `tensileOptions` object:
+
+```javascript
+const tensileOptions = {
+  cache: {
+    ttl: 120
+  }
+};
+
+app.register(tensile, tensileOptions);
+```
+
+if you want to disable caching, you can set the `cache` property to `false`:
+
+```javascript
+const tensileOptions = {
+  cache: false
+};
+
+app.register(tensile, tensileOptions);
+```
+
+The options are based on `CachableOptions` from [Cacheable](https://cacheable.org) and are passed directly to the `Cacheable` instance:
+
+```typescript
+export type CacheableOptions = {
+	/**
+	 * The primary store for the cacheable instance
+	 */
+	primary?: Keyv | KeyvStoreAdapter;
+	/**
+	 * The secondary store for the cacheable instance
+	 */
+	secondary?: Keyv | KeyvStoreAdapter;
+	/**
+	 * Whether to enable statistics for the cacheable instance
+	 */
+	stats?: boolean;
+	/**
+	 * Whether the secondary store is non-blocking mode. It is set to false by default.
+	 * If it is set to true then the secondary store will not block the primary store.
+	 */
+	nonBlocking?: boolean;
+	/**
+	 * The time-to-live for the cacheable instance and will be used as the default value.
+	 * can be a number in milliseconds or a human-readable format such as `1s` for 1 second or `1h` for 1 hour
+	 * or undefined if there is no time-to-live.
+	 */
+	ttl?: number | string;
+	/**
+	 * The namespace for the cacheable instance. It can be a string or a function that returns a string.
+	 */
+	namespace?: string | (() => string);
+};
+```
+
+To use the cache in your routes, you can use the `cache` property on the `fastify` instance:
+
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+app.register(tensile);
+
+app.get('/cache-example/:id', async (request, reply) => {
+    const { id } = request.params;
+    const cacheKey = `cache-example-${id}`;
+    
+    const cachedValue = app.cache.get(cacheKey);
+    
+    if (cachedValue) {
+        return cachedValue;
+    }
+    
+    const newValue = `New value for ${id}`;
+    
+    app.cache.set(cacheKey, newValue);
+    
+    return newValue;
+});
+```
+
+# Rate Limiting
+
+Rate limiting is based on `@fastify/rate-limit` is enabled by default with the following settings:
+
+* `limit`: 100 requests per minute
+* `timeWindow`: 60000 milliseconds (1 minute)
+
+```javascript
+const tensileOptions = {
+  rateLimit: {
+    limit: 200,
+    timeWindow: 60000
+  }
+};
+```
+
+You can disable rate limiting by setting the `rateLimit` property to `false`:
+
+```javascript
+const tensileOptions = {
+  rateLimit: false
+};
+```
+
+To read more about the options for rate limiting, please see the [@fastify/rate-limit documentation](https://github.com/fastify/fastify-rate-limit?tab=readme-ov-file#options).
+
+# CORS
+
+CORS is based on [@fastify/cors] and enabled by default with the following settings for a public API service:
+
+* `origin`: `*` which allows all origins
+* `methods`: GET, POST, PUT, DELETE, OPTIONS, PATCH
+* `allowedHeaders`: 'Content-Type', 'Authorization', 'Accept', 'X-Requested-With'
+* `exposedHeaders`: 'X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-RateLimit-Reset'
+* `maxAge`: 86400 which will cache the preflight request for 1 day
+
+Here is an example to set the CORS options:
+
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+const tensileOptions = {
+  cors: {
+    origin: 'https://example.com',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    }
+};
+
+app.register(tensile, tensileOptions);
+```
+
+# Helmet
+
+Helmet is based on [@fastify-helmet](https://github.com/fastify/fastify-helmet) and is enabled with the default settings provided. You can update the options by setting the `helmet` property in the `tensileOptions` object:
+
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+const tensileOptions = {
+  helmet: {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: true,
+      },
+    },
+  },
+};
+
+app.register(tensile, tensileOptions);
+```
+
+# Swagger/OpenAPI
+
+Swagger/OpenAPI is based on [@fastify/swagger](https://github.com/fastify/fastify-swagger) and is enabled with the following settings:
+
+* `routePrefix`: `/`
+* `openApi`: We use the latest version of OpenAPI (3.0.3) instead of swagger
+* `title`: We get this fron `package.json` and cache it in memory for performance
+* `description`: We get this fron `package.json` and cache it in memory for performance
+* `version`: We get this fron `package.json` and cache it in memory for performance
+
+You can update the options by setting the `swagger` property in the `tensileOptions` object:
+
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+const tensileOptions = {
+  docs: {
+    routePrefix: '/docs',
+    openApi: {
+      info: {
+        title: 'My API',
+        description: 'API documentation for my API',
+        version: '1.0.0',
+      },
+      servers: [
+        {
+          url: 'http://localhost:3000',
+          description: 'Development server',
+        },
+      ],
+    },
+  },
+};
+```
+
+# Logging
+
+Logging is based on [pino-pretty](https://github.com/pinojs/pino-pretty) and is enabled with the default settings provided. You can update the options by setting the `logging` property in the `tensileOptions` object:
+
+```javascript
+import fastify from 'fastify';
+import tensile from 'tensile';
+
+const app = fastify();
+
+const tensileOptions = {
+  logging: {
+    prettyPrint: {
+      colorize: true,
+      translateTime: 'SYS:standard',
+    },
+  },
+};
+
+app.register(tensile, tensileOptions);
+```
+
+# Contributing and Code of Conduct
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details. Please see [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
 
 
-## License
-MIT - see [LICENSE](LICENSE) for details
+# License
+[MIT & © Jared Wray](LICENSE)
 
 
